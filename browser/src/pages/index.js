@@ -5,29 +5,24 @@ import Layout from '../components/layout'
 import pic11 from '../assets/images/pic11.jpg'
 
 import IPFS from 'ipfs'
-// const Room = require('ipfs-pubsub-room')
-
 let ipfs
+
+// Run the node.js app first and get it's IPFS ID.
+const NODE_ID = 'QmULpfVPUPnmPctT1Uz2P5fsFBKBnTgZcXtHNf2YdV6cnA'
+
+// Relay servers.
 const CHAT_ADDR = `/dns4/wss.psfoundation.cash/tcp/443/wss/ipfs/QmaUW4oCVPUFLRqeSjvhHwGFJHGWrYWLBEt7WxnexDm3Xa`
 const BOOTSTRAP_ADDR = `/dns4/wss.fullstack.cash/tcp/443/wss/ipfs/QmNZktxkfScScnHCFSGKELH3YRqdxHQ3Le9rAoRLhZ6vgL`
-// const LOCAL_COORDINATOR = `/dns4/wss.psfoundation.cash/tcp/443/wss/ipfs/QmaUW4oCVPUFLRqeSjvhHwGFJHGWrYWLBEt7WxnexDm3Xa/p2p-circuit/p2p/Qma7XadmQ2LwVi6jkFtZJEBxDaNQwbyjj1TBQiUGxjeKrR`
 
-const ROOM_NAME = 'trout'
-// let room
+// Pubsub room
+const ROOM_NAME = 'customPubsubRoom123'
 
 // const Generic = (props) => (
 class IPFSPage extends React.Component {
-  // constructor(props) {
-  //   super(props)
-  // }
-
-  async initIpfs() {
-    ipfs = await ipfs
-    await ipfs.swarm.connect(CHAT_ADDR)
-    await ipfs.swarm.connect(BOOTSTRAP_ADDR)
-  }
 
   async componentDidMount() {
+    let ipfsId = ''
+
     console.log('Creating instance of IPFS...')
 
     ipfs = await IPFS.create({
@@ -39,95 +34,84 @@ class IPFSPage extends React.Component {
       },
       pubsub: true,
     })
+    console.log('1. IPFS node created.')
 
     // Pass the IPFS instance to the window object. Makes it easy to debug IPFS
     // issues in the browser console.
     if (typeof window !== 'undefined') window.ipfs = ipfs
 
-    await this.initIpfs()
+    // Get the IPFS ID for this node.
+    ipfsId = await ipfs.config.get("Identity");
+    ipfsId = ipfsId.PeerID;
+    console.log(`This nodes peer ID: ${ipfsId}`);
 
-    console.log('...IPFS node created.')
+    // Get the local addresses this node is listening to.
+    const localAddrs = await ipfs.swarm.localAddrs();
+    console.log(
+      `listening on these addresses: ${JSON.stringify(localAddrs, null, 2)}\n`
+    );
 
+    // Connect to the first bootstrap server
+    try {
+      console.log(`Attemping connection to Relay node: ${CHAT_ADDR}`);
+      await ipfs.swarm.connect(CHAT_ADDR);
+      console.log("2. Connected to first relay server.\n");
+    } catch (err) {
+      console.log("2. Could not connect to first relay server.\n");
+    }
+
+    // Connect to the second bootstrap server
+    try {
+      console.log(`Attemping connection to Relay node: ${BOOTSTRAP_ADDR}`);
+      await ipfs.swarm.connect(BOOTSTRAP_ADDR);
+      console.log("3. Connected to second relay server.\n");
+    } catch (err) {
+      console.log("3. Could not connect to second bootstrap server.\n");
+    }
+
+    // Periodically reconnect to the Relay servers.
     setInterval(async function() {
       await ipfs.swarm.connect(CHAT_ADDR)
       await ipfs.swarm.connect(BOOTSTRAP_ADDR)
 
-      // try {
-      //   await ipfs.swarm.connect(LOCAL_COORDINATOR)
-      // } catch (err) {
-      //   console.error('Could not dial circuit-relay node.')
-      // }
+      console.log('Reconnected to Relay nodes.')
+    }, 30000)
 
-      console.log('Connected to bootstrap nodes.')
-    }, 20000)
+    // Subscribe to the pubsub room.
+    await ipfs.pubsub.subscribe(ROOM_NAME, msg => {
+      // print out any messages recieved.
+      console.log(msg.data.toString());
+    });
+    console.log(`4. Subscribed to pubsub room ${ROOM_NAME}`);
 
-    await this.connectToPubSub()
+    // Periodically publish connection information to the pubsub channel.
+    setInterval(async function() {
+      const now = new Date();
 
-    console.log('Pubsub room has been setup.')
-  }
+      // Date-stamped connection information.
+      const connectionInfo = {
+        date: now.toLocaleString(),
+        ipfsId: ipfsId,
+        message: `Message from browser app @ ${now.toLocaleString()}`
+      };
 
-  async connectToPubSub() {
-    try {
-      // // Join the pubsub room.
-      // room = new Room(ipfs, ROOM_NAME)
-      //
-      // if (typeof window !== 'undefined') window.room = room
-      //
-      // room.on('peer joined', async peer => {
-      //   console.log('Peer joined the room:', peer)
-      //
-      //   // await sleep(2000)
-      //   //
-      //   // if (peer !== ipfsId) {
-      //   //   // Connect directly to the new peer.
-      //   //   await ipfs.swarm.connect(`${MASTER_MULTIADDR}/${peer}`)
-      //   //
-      //   //   // room.sendTo() NOT WORKING
-      //   //   // Send connection information to new peers as the enter the room.
-      //   //   // await room.sendTo(peer, msgLib.announce())
-      //   // }
-      // })
-      //
-      // room.on('peer left', peer => {
-      //   console.log('Peer left...', peer)
-      //
-      //   // Filter out the peer that just left from the list of peers.
-      //   // const newPeers = peers.filter(x => x.ipfsId !== peer)
-      //   // peers = newPeers
-      // })
-      //
-      // // now started to listen to room
-      // room.on('subscribed', () => {
-      //   console.log('Now connected!')
-      // })
-      //
-      // // Event triggers on new messages.
-      // room.on('message', async message => {
-      //   console.log(`New message: ${JSON.stringify(message, null, 2)}`)
-      // })
+      const msgBuf = Buffer.from(JSON.stringify(connectionInfo));
 
-      await ipfs.pubsub.subscribe(ROOM_NAME, msg => {
-        console.log(msg.data.toString())
-      })
-      console.log(`Subscribed to pubsub room ${ROOM_NAME}`)
+      // Publish the message to the pubsub channel.
+      await ipfs.pubsub.publish(ROOM_NAME, msgBuf);
 
-      setInterval(async function() {
-        const now = new Date()
+      console.log(`Published message to ${ROOM_NAME}\n`);
+    }, 10000);
 
-        const msgStr = `Message from browser app @ ${now.toLocaleString()}`
-        const msgBuf = Buffer.from(msgStr)
-
-        // const tmp = msgBuf.toString()
-        // console.log(`tmp: ${tmp}`)
-
-        await ipfs.pubsub.publish(ROOM_NAME, msgBuf)
-
-        console.log(`Published message to ${ROOM_NAME}`)
-      }, 10000)
-    } catch (err) {
-      console.error(`Error in connectToPubSub()`)
-      throw err
-    }
+    // Try to connect to the node.js node.
+    setInterval(async function() {
+      try {
+        await ipfs.swarm.connect(`${BOOTSTRAP_ADDR}/p2p-circuit/p2p/${NODE_ID}`);
+        console.log('Connected to node.js IPFS node')
+      } catch(err) {
+        console.log('Error trying to connect to node.js peer via circuit-relay')
+      }
+    }, 30000)
   }
 
   render() {
