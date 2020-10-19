@@ -1,0 +1,16 @@
+.QRScanner-container{
+    margin-top: 4em;
+    text-align: center;
+}
+
+.change-button {
+    margin-bottom: 2em;
+    margin-top: 2em;
+}
+
+.qr-result {
+    margin-top: 2em;
+    word-break: break-all;
+    margin-left: 2em;
+    margin-right: 2em;
+}

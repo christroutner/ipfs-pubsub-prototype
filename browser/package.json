@@ -1,0 +1,44 @@
+{
+  "name": "browser",
+  "description": "IPFS-ready statis site implementing browser-based IPFS node",
+  "version": "1.0.0",
+  "author": "Chris Troutner <chris.troutner@gmail.com>",
+  "dependencies": {
+    "@loadable/component": "^5.12.0",
+    "gatsby": "^2.23.3",
+    "gatsby-plugin-ipfs": "^2.0.2",
+    "gatsby-plugin-manifest": "^2.4.11",
+    "gatsby-plugin-react-helmet": "^3.3.4",
+    "gatsby-plugin-sass": "^2.3.4",
+    "gatsby-plugin-sharp": "^2.6.11",
+    "gatsby-remark-images": "^3.3.10",
+    "gatsby-source-filesystem": "^2.3.11",
+    "gatsby-transformer-json": "^2.4.5",
+    "gatsby-transformer-remark": "^2.8.15",
+    "ipfs": "^0.50.2",
+    "ipfs-pubsub-room": "^2.0.1",
+    "memo-get-gatsby": "^1.0.2",
+    "node-sass": "^4.14.1",
+    "react": "^16.13.1",
+    "react-collapsible": "^2.8.0",
+    "react-dom": "^16.13.1",
+    "react-helmet": "^5.2.0",
+    "react-qr-reader": "^2.2.1",
+    "styled-components": "^4.2.0"
+  },
+  "keywords": [
+    "gatsby"
+  ],
+  "license": "MIT",
+  "scripts": {
+    "build": "gatsby build --prefix-paths",
+    "start": "npm run develop",
+    "develop": "gatsby develop",
+    "format": "prettier --write '**/*.js'",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "devDependencies": {
+    "prettier": "^1.14.2"
+  },
+  "repository": "christroutner/ipfs-pubsub-prototype"
+}

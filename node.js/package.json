@@ -1,0 +1,57 @@
+{
+  "name": "rest-service",
+  "version": "1.0.0",
+  "description": "A node.js IPFS node that communicates using pubsub and circuit-relay",
+  "main": "rest-service.js",
+  "scripts": {
+    "start": "node rest-service.js",
+    "lint": "standard --env mocha --fix"
+  },
+  "keywords": [
+    "bitcoin",
+    "bitcoin cash",
+    "wallet",
+    "javascript",
+    "cryptocurrency",
+    "react",
+    "front end",
+    "client",
+    "apidoc",
+    "slp",
+    "tokens"
+  ],
+  "author": "Chris Troutner <chris.troutner@gmail.com>",
+  "license": "MIT",
+  "apidoc": {
+    "title": "rest-service",
+    "url": "localhost:5000"
+  },
+  "repository": "christroutner/ipfs-pubsub-prototype",
+  "dependencies": {
+    "ipfs": "^0.50.1"
+  },
+  "devDependencies": {
+    "chai": "^4.1.2",
+    "coveralls": "^3.0.2",
+    "eslint": "5.16.0",
+    "eslint-config-prettier": "^6.0.0",
+    "eslint-config-standard": "^14.1.0",
+    "eslint-plugin-node": "^11.1.0",
+    "eslint-plugin-prettier": "^3.1.0",
+    "eslint-plugin-standard": "^4.0.0",
+    "husky": "^4.2.5",
+    "mocha": "^7.0.1",
+    "nyc": "^15.0.0",
+    "semantic-release": "^17.0.0",
+    "sinon": "^9.0.2",
+    "standard": "^14.3.1"
+  },
+  "release": {
+    "publish": [
+      {
+        "path": "@semantic-release/npm",
+        "npmPublish": false
+      }
+    ]
+  }
+}
