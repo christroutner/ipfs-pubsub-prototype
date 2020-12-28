@@ -8,7 +8,7 @@ import IPFS from 'ipfs'
 let ipfs
 
 // Run the node.js app first and get it's IPFS ID.
-const NODE_ID = 'QmfGBRT6BbWJd7yUc2uYdaUZJBbnEFvTqehPFoSMQ6wgdr'
+const NODE_ID = 'Qmc17i7gPpksZED72ahNMnhobgDRShzRqz54wQUaSVYDTf'
 
 // Relay servers.
 const CHAT_ADDR = `/dns4/wss.psfoundation.cash/tcp/443/wss/ipfs/QmaUW4oCVPUFLRqeSjvhHwGFJHGWrYWLBEt7WxnexDm3Xa`
