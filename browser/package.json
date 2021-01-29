@@ -1,10 +1,11 @@
 {
-  "name": "browser",
-  "description": "IPFS-ready statis site implementing browser-based IPFS node",
+  "name": "gatsby-ipfs-boilerplate",
+  "description": "IPFS-ready static site",
   "version": "1.0.0",
   "author": "Chris Troutner <chris.troutner@gmail.com>",
   "dependencies": {
     "@loadable/component": "^5.12.0",
+    "electron": "^11.1.0",
     "gatsby": "^2.23.3",
     "gatsby-plugin-ipfs": "^2.0.2",
     "gatsby-plugin-manifest": "^2.4.11",
@@ -15,9 +16,7 @@
     "gatsby-source-filesystem": "^2.3.11",
     "gatsby-transformer-json": "^2.4.5",
     "gatsby-transformer-remark": "^2.8.15",
-    "ipfs": "^0.50.2",
-    "ipfs-pubsub-room": "^2.0.1",
-    "memo-get-gatsby": "^1.0.2",
+    "ipfs": "^0.52.2",
     "node-sass": "^4.14.1",
     "react": "^16.13.1",
     "react-collapsible": "^2.8.0",
@@ -31,7 +30,8 @@
   ],
   "license": "MIT",
   "scripts": {
-    "build": "gatsby build --prefix-paths",
+    "build": "gatsby build",
+    "build:ipfs": "gatsby build --prefix-paths",
     "start": "npm run develop",
     "develop": "gatsby develop",
     "format": "prettier --write '**/*.js'",
@@ -40,5 +40,8 @@
   "devDependencies": {
     "prettier": "^1.14.2"
   },
-  "repository": "christroutner/ipfs-pubsub-prototype"
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/gatsbyjs/gatsby-starter-default"
+  }
 }
