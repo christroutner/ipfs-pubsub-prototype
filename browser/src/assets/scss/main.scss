@@ -69,3 +69,27 @@
 	@import 'layout/footer';
 	@import 'layout/wrapper';
 	@import 'layout/menu';
+
+// Responsive iframe
+.youtube-responsive-container {
+	position:relative;
+	overflow:hidden;
+	height: auto;
+    display: flex;
+    align-items: center;
+}
+
+.break-word{
+	word-break: break-word;
+	max-width: fit-content;
+	text-align: center;
+}
+
+@media (max-width: 600px) {
+	.youtube-responsive-container iframe, .youtube-responsive-container object, .youtube-responsive-container embed {
+	    width:100%;
+	}
+	ul{
+		overflow-wrap: break-word;
+	}
+  }
