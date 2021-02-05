@@ -28,7 +28,8 @@
   },
   "repository": "christroutner/ipfs-pubsub-prototype",
   "dependencies": {
-    "ipfs": "^0.50.1"
+    "ipfs": "^0.50.1",
+    "ipfs-coord": "^1.2.5"
   },
   "devDependencies": {
     "chai": "^4.1.2",
