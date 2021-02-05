@@ -14,6 +14,7 @@ class IPFSPage extends React.Component {
     this.state = {
       output: "",
       chatOutput: "",
+      chatInput: "",
       showTerminal: true
     };
 
@@ -57,7 +58,14 @@ class IPFSPage extends React.Component {
                   readOnly
                   value={`${chatOutput ? `${chatOutput}>` : ">"}`}
                 />
-                <input type="text" id="chatInput" name="chatInput" />
+                <input
+                  type="text"
+                  id="chatInput"
+                  name="chatInput"
+                  value={this.state.chatInput}
+                  onChange={this.handleChatInput}
+                  onKeyDown={_this.handleKeyDown}
+                />
               </span>
 
               <span className="image main">
@@ -131,6 +139,43 @@ class IPFSPage extends React.Component {
     _this.setState({
       showTerminal: false
     });
+  }
+
+  // Handles text typed into the chat input box.
+  handleChatInput = event => {
+    event.preventDefault();
+
+    const target = event.target;
+    const value = target.value;
+    const name = target.name;
+    // console.log('value: ', value)
+
+    this.setState({
+      [name]: value
+    });
+  };
+
+  // Handles when the Enter key is pressed while in the chat input box.
+  async handleKeyDown(e) {
+    if (e.key === "Enter") {
+      // _this.submitMsg()
+      console.log("Enter key");
+
+      // Send a chat message to the chat pubsub room.
+      // const now = new Date();
+      // const msg = `Message from BROWSER at ${now.toLocaleString()}`
+      const msg = _this.state.chatInput;
+      console.log(`Sending this message: ${msg}`);
+
+      const CHAT_ROOM_NAME = "psf-ipfs-chat-001";
+
+      const chatData = _this.appIpfs.ipfsCoord.ipfs.schema.chat(msg);
+      const chatDataStr = JSON.stringify(chatData);
+      await _this.appIpfs.ipfsCoord.ipfs.pubsub.publishToPubsubChannel(
+        CHAT_ROOM_NAME,
+        chatDataStr
+      );
+    }
   }
 }
 
