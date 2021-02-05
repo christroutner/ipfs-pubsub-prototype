@@ -3,7 +3,6 @@ import Helmet from "react-helmet";
 import Layout from "../components/layout";
 import AppIpfs from "../lib/ipfs";
 
-
 let _this;
 
 class IPFSPage extends React.Component {
@@ -14,6 +13,7 @@ class IPFSPage extends React.Component {
 
     this.state = {
       output: "",
+      chatOutput: "",
       showTerminal: true
     };
 
@@ -33,7 +33,7 @@ class IPFSPage extends React.Component {
   }
 
   render() {
-    const { output, showTerminal } = _this.state;
+    const { output, chatOutput, showTerminal } = _this.state;
     return (
       <Layout>
         <Helmet>
@@ -47,6 +47,19 @@ class IPFSPage extends React.Component {
               <header className="major">
                 <h1>IPFS Example</h1>
               </header>
+
+              <span className="image main">
+                <textarea
+                  id="chatTerminal"
+                  name="chatTerminal"
+                  rows="10"
+                  cols="50"
+                  readOnly
+                  value={`${chatOutput ? `${chatOutput}>` : ">"}`}
+                />
+                <input type="text" id="chatInput" name="chatInput" />
+              </span>
+
               <span className="image main">
                 {showTerminal && (
                   <textarea
