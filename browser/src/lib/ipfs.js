@@ -40,16 +40,16 @@ class AppIpfs {
       await this.ipfsCoord.isReady()
 
       // subscribe to the 'chat' chatroom.
-      await this.ipfsCoord.ipfs.pubsub.subscribeToPubsubChannel(CHAT_ROOM_NAME)
+      await this.ipfsCoord.ipfs.pubsub.subscribeToPubsubChannel(CHAT_ROOM_NAME, this.handleChatMsg)
 
       // Send a chat message to the chat room.
-      setInterval(async function() {
-        const now = new Date()
-        const msg = `Message from BROWSER at ${now.toLocaleString()}`
-        const chatData = _this.ipfsCoord.ipfs.schema.chat(msg)
-        const chatDataStr = JSON.stringify(chatData)
-        await _this.ipfsCoord.ipfs.pubsub.publishToPubsubChannel(CHAT_ROOM_NAME, chatDataStr)
-      }, 10000)
+      // setInterval(async function() {
+      //   const now = new Date()
+      //   const msg = `Message from BROWSER at ${now.toLocaleString()}`
+      //   const chatData = _this.ipfsCoord.ipfs.schema.chat(msg)
+      //   const chatDataStr = JSON.stringify(chatData)
+      //   await _this.ipfsCoord.ipfs.pubsub.publishToPubsubChannel(CHAT_ROOM_NAME, chatDataStr)
+      // }, 10000)
 
       // Pass the IPFS instance to the window object. Makes it easy to debug IPFS
       // issues in the browser console.
@@ -64,7 +64,7 @@ class AppIpfs {
 
       console.log("IPFS node setup complete.");
       this.handleLog("IPFS node setup complete.");
-      this.handleLog(" ");
+      _this.handleLog(" ");
 
       // Subscribe to the pubsub room.
       // await this.ipfs.pubsub.subscribe(ROOM_NAME, msg => {
@@ -85,6 +85,15 @@ class AppIpfs {
     } catch (err) {
       console.error("Error in startIpfs(): ", err);
       this.handleLog("Error trying to initialize IPFS node!");
+    }
+  }
+
+  // This funciton handles incoming chat messages.
+  handleChatMsg(msg) {
+    try {
+      console.log('msg: ', msg)
+    } catch(err) {
+      console.error('Error in handleChatMsg(): ', err)
     }
   }
 

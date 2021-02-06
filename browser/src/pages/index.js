@@ -159,13 +159,17 @@ class IPFSPage extends React.Component {
   async handleKeyDown(e) {
     if (e.key === "Enter") {
       // _this.submitMsg()
-      console.log("Enter key");
+      // console.log("Enter key");
 
       // Send a chat message to the chat pubsub room.
       // const now = new Date();
       // const msg = `Message from BROWSER at ${now.toLocaleString()}`
       const msg = _this.state.chatInput;
       console.log(`Sending this message: ${msg}`);
+
+      _this.setState({
+        chatOutput: _this.state.chatOutput + "   " + msg + "\n"
+      });
 
       const CHAT_ROOM_NAME = "psf-ipfs-chat-001";
 
@@ -175,6 +179,10 @@ class IPFSPage extends React.Component {
         CHAT_ROOM_NAME,
         chatDataStr
       );
+
+      _this.setState({
+        chatInput: ""
+      });
     }
   }
 }

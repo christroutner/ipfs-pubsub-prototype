@@ -51,7 +51,7 @@ async function startClientNode() {
 
 
     // subscribe to the 'chat' chatroom.
-    await ipfsCoord.ipfs.pubsub.subscribeToPubsubChannel(CHAT_ROOM_NAME)
+    await ipfsCoord.ipfs.pubsub.subscribeToPubsubChannel(CHAT_ROOM_NAME, handleChat)
 
     // Send a chat message to the chat room.
     setInterval(async function() {
@@ -133,6 +133,12 @@ async function startClientNode() {
   }
 }
 startClientNode();
+
+function handleChat(msgData) {
+  // console.log('msgData: ', msgData)
+
+  console.log(`Peer ${msgData.from} says: ${msgData.data.data.message}`)
+}
 
 // Promise based sleep function:
 function sleep(ms) {
