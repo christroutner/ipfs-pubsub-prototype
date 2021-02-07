@@ -57,8 +57,19 @@ async function startClientNode() {
     setInterval(async function() {
       const now = new Date()
       const msg = `Message from node.js at ${now.toLocaleString()}`
-      const chatData = ipfsCoord.ipfs.schema.chat(msg)
+      const handle = 'test node'
+      const chatObj = {
+        message: msg,
+        handle: handle
+      }
+
+      // Add the chat data to the schema.
+      const chatData = ipfsCoord.ipfs.schema.chat(chatObj)
+
+      // Convert the chat JSON object into a string.
       const chatDataStr = JSON.stringify(chatData)
+
+      // Publish the stringified chat object to the pubsub channel.
       await ipfsCoord.ipfs.pubsub.publishToPubsubChannel(CHAT_ROOM_NAME, chatDataStr)
     }, 10000)
 
@@ -137,7 +148,11 @@ startClientNode();
 function handleChat(msgData) {
   // console.log('msgData: ', msgData)
 
-  console.log(`Peer ${msgData.from} says: ${msgData.data.data.message}`)
+  let from = msgData.from
+  if(msgData.data.data.handle)
+    from = msgData.data.data.handle
+
+  console.log(`Peer ${from} says: ${msgData.data.data.message}`)
 }
 
 // Promise based sleep function:

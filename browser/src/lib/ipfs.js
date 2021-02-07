@@ -14,6 +14,7 @@ let _this;
 class AppIpfs {
   constructor(ipfsConfig) {
     this.handleLog = ipfsConfig.handleLog;
+    this.handleChatLog = ipfsConfig.handleChatLog
 
     _this = this;
   }
@@ -40,7 +41,7 @@ class AppIpfs {
       await this.ipfsCoord.isReady()
 
       // subscribe to the 'chat' chatroom.
-      await this.ipfsCoord.ipfs.pubsub.subscribeToPubsubChannel(CHAT_ROOM_NAME, this.handleChatMsg)
+      await this.ipfsCoord.ipfs.pubsub.subscribeToPubsubChannel(CHAT_ROOM_NAME, this.handleChatLog)
 
       // Send a chat message to the chat room.
       // setInterval(async function() {

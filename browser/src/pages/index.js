@@ -19,7 +19,8 @@ class IPFSPage extends React.Component {
     };
 
     const ipfsConfig = {
-      handleLog: _this.handleLog
+      handleLog: _this.handleLog,
+      handleChatLog: _this.handleIncomingChatMsg
     };
     this.appIpfs = new AppIpfs(ipfsConfig);
   }
@@ -155,6 +156,36 @@ class IPFSPage extends React.Component {
     });
   };
 
+  handleIncomingChatMsg(msg) {
+    try {
+      // console.log('msg: ', msg)
+      const chatData = msg.data.data.message
+      const chatHandle = msg.data.data.handle
+      const chatMsg = `${chatHandle}: ${chatData}`
+
+      _this.handleChatLog(chatMsg)
+
+      // _this.keepScrolled();
+    } catch (error) {
+      console.warn(error);
+    }
+  }
+
+  // Adds a line to the terminal
+  handleChatLog(msg) {
+    try {
+      console.log('msg: ', msg)
+
+      _this.setState({
+        chatOutput: _this.state.chatOutput + "   " + msg + "\n"
+      });
+
+      // _this.keepScrolled();
+    } catch (error) {
+      console.warn(error);
+    }
+  }
+
   // Handles when the Enter key is pressed while in the chat input box.
   async handleKeyDown(e) {
     if (e.key === "Enter") {
@@ -167,13 +198,16 @@ class IPFSPage extends React.Component {
       const msg = _this.state.chatInput;
       console.log(`Sending this message: ${msg}`);
 
-      _this.setState({
-        chatOutput: _this.state.chatOutput + "   " + msg + "\n"
-      });
+      _this.handleChatLog(msg)
 
       const CHAT_ROOM_NAME = "psf-ipfs-chat-001";
 
-      const chatData = _this.appIpfs.ipfsCoord.ipfs.schema.chat(msg);
+      const chatObj = {
+        message: msg,
+        handle: 'browser'
+      }
+
+      const chatData = _this.appIpfs.ipfsCoord.ipfs.schema.chat(chatObj);
       const chatDataStr = JSON.stringify(chatData);
       await _this.appIpfs.ipfsCoord.ipfs.pubsub.publishToPubsubChannel(
         CHAT_ROOM_NAME,
