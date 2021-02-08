@@ -29,7 +29,7 @@
   "repository": "christroutner/ipfs-pubsub-prototype",
   "dependencies": {
     "ipfs": "^0.50.1",
-    "ipfs-coord": "^1.3.10"
+    "ipfs-coord": "^1.3.11"
   },
   "devDependencies": {
     "chai": "^4.1.2",

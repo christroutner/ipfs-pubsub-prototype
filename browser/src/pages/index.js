@@ -238,7 +238,7 @@ class IPFSPage extends React.Component {
       const msg = _this.state.chatInput;
       // console.log(`Sending this message: ${msg}`);
 
-      _this.handleChatLog(msg);
+      _this.handleChatLog(`me: ${msg}`);
 
       const CHAT_ROOM_NAME = "psf-ipfs-chat-001";
 
