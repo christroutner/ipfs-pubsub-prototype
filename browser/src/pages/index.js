@@ -176,7 +176,20 @@ class IPFSPage extends React.Component {
 
       _this.handleChatLog(chatMsg);
 
-      // _this.keepScrolled();
+      _this.keepChatScrolled();
+    } catch (error) {
+      console.warn(error);
+    }
+  }
+
+  // Keeps the terminal scrolled to the last line
+  keepChatScrolled() {
+    try {
+      // Keeps scrolled to the bottom
+      var textarea = document.getElementById("chatTerminal");
+      if (textarea) {
+        textarea.scrollTop = textarea.scrollHeight;
+      }
     } catch (error) {
       console.warn(error);
     }
@@ -185,7 +198,7 @@ class IPFSPage extends React.Component {
   // Adds a line to the terminal
   handleChatLog(msg) {
     try {
-      console.log("msg: ", msg);
+      // console.log("msg: ", msg);
 
       _this.setState({
         chatOutput: _this.state.chatOutput + "   " + msg + "\n"
@@ -223,7 +236,7 @@ class IPFSPage extends React.Component {
       // const now = new Date();
       // const msg = `Message from BROWSER at ${now.toLocaleString()}`
       const msg = _this.state.chatInput;
-      console.log(`Sending this message: ${msg}`);
+      // console.log(`Sending this message: ${msg}`);
 
       _this.handleChatLog(msg);
 
@@ -245,6 +258,8 @@ class IPFSPage extends React.Component {
       _this.setState({
         chatInput: ""
       });
+
+      _this.keepChatScrolled();
     }
   }
 }
