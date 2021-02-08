@@ -15,7 +15,8 @@ class IPFSPage extends React.Component {
       output: "",
       chatOutput: "",
       chatInput: "",
-      showTerminal: true
+      showTerminal: true,
+      handle: "browser"
     };
 
     const ipfsConfig = {
@@ -50,6 +51,16 @@ class IPFSPage extends React.Component {
                 <h1>IPFS Example</h1>
               </header>
 
+              <label>
+                Handle:{" "}
+                <input
+                  type="text"
+                  id="handle"
+                  name="handle"
+                  value={this.state.handle}
+                  onChange={this.handleHandleInput}
+                />
+              </label>
               <span className="image main">
                 <textarea
                   id="chatTerminal"
@@ -159,11 +170,11 @@ class IPFSPage extends React.Component {
   handleIncomingChatMsg(msg) {
     try {
       // console.log('msg: ', msg)
-      const chatData = msg.data.data.message
-      const chatHandle = msg.data.data.handle
-      const chatMsg = `${chatHandle}: ${chatData}`
+      const chatData = msg.data.data.message;
+      const chatHandle = msg.data.data.handle;
+      const chatMsg = `${chatHandle}: ${chatData}`;
 
-      _this.handleChatLog(chatMsg)
+      _this.handleChatLog(chatMsg);
 
       // _this.keepScrolled();
     } catch (error) {
@@ -174,7 +185,7 @@ class IPFSPage extends React.Component {
   // Adds a line to the terminal
   handleChatLog(msg) {
     try {
-      console.log('msg: ', msg)
+      console.log("msg: ", msg);
 
       _this.setState({
         chatOutput: _this.state.chatOutput + "   " + msg + "\n"
@@ -185,6 +196,22 @@ class IPFSPage extends React.Component {
       console.warn(error);
     }
   }
+
+  // Handles text typed into the 'handle' input box.
+  handleHandleInput = event => {
+    event.preventDefault();
+
+    const target = event.target;
+    const value = target.value;
+    const name = target.name;
+    // console.log('value: ', value)
+
+    this.setState({
+      [name]: value
+    });
+  };
+
+
 
   // Handles when the Enter key is pressed while in the chat input box.
   async handleKeyDown(e) {
@@ -198,14 +225,15 @@ class IPFSPage extends React.Component {
       const msg = _this.state.chatInput;
       console.log(`Sending this message: ${msg}`);
 
-      _this.handleChatLog(msg)
+      _this.handleChatLog(msg);
 
       const CHAT_ROOM_NAME = "psf-ipfs-chat-001";
 
       const chatObj = {
         message: msg,
-        handle: 'browser'
-      }
+        // handle: "browser"
+        handle: _this.state.handle
+      };
 
       const chatData = _this.appIpfs.ipfsCoord.ipfs.schema.chat(chatObj);
       const chatDataStr = JSON.stringify(chatData);

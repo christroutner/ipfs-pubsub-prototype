@@ -6,15 +6,14 @@ import IPFS from "ipfs";
 import IpfsCoord from "ipfs-coord";
 
 // CHANGE THESE VARIABLES
-const CHAT_ROOM_NAME = 'psf-ipfs-chat-001';
-
+const CHAT_ROOM_NAME = "psf-ipfs-chat-001";
 
 let _this;
 
 class AppIpfs {
   constructor(ipfsConfig) {
     this.handleLog = ipfsConfig.handleLog;
-    this.handleChatLog = ipfsConfig.handleChatLog
+    this.handleChatLog = ipfsConfig.handleChatLog;
 
     _this = this;
   }
@@ -35,13 +34,16 @@ class AppIpfs {
         type: "browser",
         logHandler: this.handleLog
       });
-      this.handleLog('ipfs-coord library instantiated.')
+      this.handleLog("ipfs-coord library instantiated.");
 
       // Wait for the coordination stuff to be setup.
-      await this.ipfsCoord.isReady()
+      await this.ipfsCoord.isReady();
 
       // subscribe to the 'chat' chatroom.
-      await this.ipfsCoord.ipfs.pubsub.subscribeToPubsubChannel(CHAT_ROOM_NAME, this.handleChatLog)
+      await this.ipfsCoord.ipfs.pubsub.subscribeToPubsubChannel(
+        CHAT_ROOM_NAME,
+        this.handleChatLog
+      );
 
       // Send a chat message to the chat room.
       // setInterval(async function() {
@@ -92,9 +94,9 @@ class AppIpfs {
   // This funciton handles incoming chat messages.
   handleChatMsg(msg) {
     try {
-      console.log('msg: ', msg)
-    } catch(err) {
-      console.error('Error in handleChatMsg(): ', err)
+      console.log("msg: ", msg);
+    } catch (err) {
+      console.error("Error in handleChatMsg(): ", err);
     }
   }
 
