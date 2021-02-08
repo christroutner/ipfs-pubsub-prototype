@@ -13,8 +13,8 @@ const CHAT_ROOM_NAME = 'psf-ipfs-chat-001';
 
 // Global npm libraries
 const IPFS = require("ipfs");
-// const IpfsCoord = require("ipfs-coord")
-const IpfsCoord = require('../../ipfs-coord/index')
+const IpfsCoord = require("ipfs-coord")
+// const IpfsCoord = require('../../ipfs-coord/index')
 
 let ipfsId; // Used to track the IPFS ID of this node.
 let ipfs; // instance of IPFS for this node.
@@ -56,8 +56,8 @@ async function startClientNode() {
     // Send a chat message to the chat room.
     setInterval(async function() {
       const now = new Date()
-      const msg = `Message from node.js at ${now.toLocaleString()}`
-      const handle = 'test node'
+      const msg = `Message from chat bot at ${now.toLocaleString()}`
+      const handle = 'chat bot'
       const chatObj = {
         message: msg,
         handle: handle
@@ -71,7 +71,7 @@ async function startClientNode() {
 
       // Publish the stringified chat object to the pubsub channel.
       await ipfsCoord.ipfs.pubsub.publishToPubsubChannel(CHAT_ROOM_NAME, chatDataStr)
-    }, 10000)
+    }, 60000*5) // five minutes
 
     // Get the IPFS ID for this node.
     // ipfsId = await ipfs.config.get("Identity");
