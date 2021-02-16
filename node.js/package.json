@@ -4,7 +4,7 @@
   "description": "A node.js IPFS node that communicates using pubsub and circuit-relay",
   "main": "rest-service.js",
   "scripts": {
-    "start": "node rest-service.js",
+    "start": "node ipfs-chat-bot.js",
     "lint": "standard --env mocha --fix"
   },
   "keywords": [
@@ -29,7 +29,7 @@
   "repository": "christroutner/ipfs-pubsub-prototype",
   "dependencies": {
     "ipfs": "^0.50.1",
-    "ipfs-coord": "^1.3.12"
+    "ipfs-coord": "^2.0.3"
   },
   "devDependencies": {
     "chai": "^4.1.2",
