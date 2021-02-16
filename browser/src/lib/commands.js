@@ -17,6 +17,8 @@ class CommandRouter {
           return this.help();
         case "list":
           return await this.list(command, appIpfs);
+        case "clear":
+          return "clear"
         default:
           return "";
       }
@@ -31,7 +33,8 @@ class CommandRouter {
     const msg = `
 Available commands:
  - help - this help.
- - list peers - list all connected IPFS peers.
+ - clear - clear the command terminal.
+ - list peers - list all known ipfs-coord peers.
  - list relays - list all known circuit relays and their state.
 `;
 
@@ -44,8 +47,29 @@ Available commands:
     switch (words[1]) {
       case "relays":
         return await this.listRelays(appIpfs);
+      case "peers":
+        return await this.listPeers(appIpfs)
       default:
         return "";
+    }
+  }
+
+  // List known ipfs-coord peers.
+  async listPeers(appIpfs) {
+    try {
+      console.log('appIpfs: ', appIpfs)
+
+      const relays = `Known ipfs-coord peers:\n${JSON.stringify(
+        appIpfs.ipfsCoord.ipfs.peers.state.peers,
+        null,
+        2
+      )}`;
+      return relays;
+
+      // return "test"
+    } catch (err) {
+      console.error("Error in listRelays(): ", err);
+      return "Error in listRelays()";
     }
   }
 

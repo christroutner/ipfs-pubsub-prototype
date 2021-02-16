@@ -301,9 +301,13 @@ class IPFSPage extends React.Component {
       // _this.handleCommandLog(`me: ${msg}`);
 
       const outMsg = await _this.commandRouter.route(msg, _this.appIpfs);
-      _this.handleCommandLog(`\n${outMsg}`);
-
-      // _this.keepCommandScrolled();
+      if(outMsg === 'clear') {
+        _this.setState({
+          commandOutput: ""
+        });
+      } else {
+        _this.handleCommandLog(`\n${outMsg}`);
+      }
 
       // Clear the input text box.
       _this.setState({
