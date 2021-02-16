@@ -19,6 +19,8 @@ class CommandRouter {
           return await this.list(command, appIpfs);
         case "clear":
           return "clear"
+        case "pubsub":
+          return await this.pubsub(command, appIpfs)
         default:
           return "";
       }
@@ -36,6 +38,7 @@ Available commands:
  - clear - clear the command terminal.
  - list peers - list all known ipfs-coord peers.
  - list relays - list all known circuit relays and their state.
+ - pubsub list - list all subscribed pubsub channels.
 `;
 
     return msg;
@@ -49,6 +52,17 @@ Available commands:
         return await this.listRelays(appIpfs);
       case "peers":
         return await this.listPeers(appIpfs)
+      default:
+        return "";
+    }
+  }
+
+  async pubsub(command, appIpfs) {
+    const words = command.toString().split(" ");
+
+    switch (words[1]) {
+      case "list":
+        return await this.listPubsubChannels(appIpfs);
       default:
         return "";
     }
@@ -89,6 +103,21 @@ Available commands:
     } catch (err) {
       console.error("Error in listRelays(): ", err);
       return "Error in listRelays()";
+    }
+  }
+
+  async listPubsubChannels(appIpfs) {
+    try {
+      // console.log('appIpfs: ', appIpfs)
+
+      const channels = await appIpfs.ipfs.pubsub.ls()
+
+      const outStr = `Pubsub Subscriptions:\n${JSON.stringify(channels, null, 2)}`
+
+      return outStr
+    } catch (err) {
+      console.error("Error in listPubsubChannels(): ", err);
+      return "Error in listPubsubChannels()";
     }
   }
 }
