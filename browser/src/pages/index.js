@@ -2,6 +2,7 @@ import React from "react";
 import Helmet from "react-helmet";
 import Layout from "../components/layout";
 import AppIpfs from "../lib/ipfs";
+import CommandRouter from "../lib/commands";
 
 let _this;
 
@@ -15,6 +16,8 @@ class IPFSPage extends React.Component {
       output: "",
       chatOutput: "",
       chatInput: "",
+      commandInput: "",
+      commandOutput: "",
       showTerminal: true,
       handle: "browser"
     };
@@ -24,6 +27,7 @@ class IPFSPage extends React.Component {
       handleChatLog: _this.handleIncomingChatMsg
     };
     this.appIpfs = new AppIpfs(ipfsConfig);
+    this.commandRouter = new CommandRouter();
   }
 
   async componentDidMount() {
@@ -36,7 +40,7 @@ class IPFSPage extends React.Component {
   }
 
   render() {
-    const { output, chatOutput, showTerminal } = _this.state;
+    const { output, chatOutput, showTerminal, commandOutput } = _this.state;
     return (
       <Layout>
         <Helmet>
@@ -61,37 +65,67 @@ class IPFSPage extends React.Component {
                   onChange={this.handleHandleInput}
                 />
               </label>
+
               <span className="image main">
-                <textarea
-                  id="chatTerminal"
-                  name="chatTerminal"
-                  rows="10"
-                  cols="50"
-                  readOnly
-                  value={`${chatOutput ? `${chatOutput}>` : ">"}`}
-                />
-                <input
-                  type="text"
-                  id="chatInput"
-                  name="chatInput"
-                  value={this.state.chatInput}
-                  onChange={this.handleChatInput}
-                  onKeyDown={_this.handleKeyDown}
-                />
+                <label>
+                  Chat Terminal:
+                  <textarea
+                    id="chatTerminal"
+                    name="chatTerminal"
+                    rows="10"
+                    cols="50"
+                    readOnly
+                    value={`${chatOutput ? `${chatOutput}>` : ">"}`}
+                  />
+                  <input
+                    type="text"
+                    id="chatInput"
+                    name="chatInput"
+                    value={this.state.chatInput}
+                    onChange={this.handleTextInput}
+                    onKeyDown={_this.handleChatKeyDown}
+                  />
+                </label>
+              </span>
+
+              <span className="image main">
+                <label>
+                  Command Terminal:
+                  <textarea
+                    id="commandTerminal"
+                    name="commandTerminal"
+                    rows="10"
+                    cols="50"
+                    readOnly
+                    value={`${commandOutput ? `${commandOutput}>` : ">"}`}
+                  />
+                  <input
+                    type="text"
+                    id="commandInput"
+                    name="commandInput"
+                    value={this.state.commandInput}
+                    onChange={this.handleTextInput}
+                    onKeyDown={_this.handleCommandKeyDown}
+                  />
+                </label>
               </span>
 
               <span className="image main">
                 {showTerminal && (
-                  <textarea
-                    id="ipfsTerminal"
-                    name="ipfsTerminal"
-                    rows="10"
-                    cols="50"
-                    readOnly
-                    value={`${output ? `${output}>` : ">"}`}
-                  />
+                  <label>
+                    IPFS Status:
+                    <textarea
+                      id="ipfsTerminal"
+                      name="ipfsTerminal"
+                      rows="10"
+                      cols="50"
+                      readOnly
+                      value={`${output ? `${output}>` : ">"}`}
+                    />
+                  </label>
                 )}
               </span>
+
               <p>
                 This page demonstrates how to create an IPFS node in the
                 browser. If you open a web console, you can interact with the
@@ -153,8 +187,8 @@ class IPFSPage extends React.Component {
     });
   }
 
-  // Handles text typed into the chat input box.
-  handleChatInput = event => {
+  // Handles text typed into the input box.
+  handleTextInput = event => {
     event.preventDefault();
 
     const target = event.target;
@@ -166,6 +200,8 @@ class IPFSPage extends React.Component {
       [name]: value
     });
   };
+
+  /* START chat handling functions */
 
   handleIncomingChatMsg(msg) {
     try {
@@ -210,24 +246,8 @@ class IPFSPage extends React.Component {
     }
   }
 
-  // Handles text typed into the 'handle' input box.
-  handleHandleInput = event => {
-    event.preventDefault();
-
-    const target = event.target;
-    const value = target.value;
-    const name = target.name;
-    // console.log('value: ', value)
-
-    this.setState({
-      [name]: value
-    });
-  };
-
-
-
   // Handles when the Enter key is pressed while in the chat input box.
-  async handleKeyDown(e) {
+  async handleChatKeyDown(e) {
     if (e.key === "Enter") {
       // _this.submitMsg()
       // console.log("Enter key");
@@ -261,6 +281,94 @@ class IPFSPage extends React.Component {
 
       _this.keepChatScrolled();
     }
+  }
+  /* END chat handling functions */
+
+  //
+  /* START command handling functions */
+  // Handles when the Enter key is pressed while in the chat input box.
+  async handleCommandKeyDown(e) {
+    if (e.key === "Enter") {
+      // _this.submitMsg()
+      // console.log("Enter key");
+
+      // Send a chat message to the chat pubsub room.
+      // const now = new Date();
+      // const msg = `Message from BROWSER at ${now.toLocaleString()}`
+      const msg = _this.state.commandInput;
+      // console.log(`Sending this message: ${msg}`);
+
+      // _this.handleCommandLog(`me: ${msg}`);
+
+      const outMsg = _this.commandRouter.route(msg);
+      _this.handleCommandLog(`\n${outMsg}`);
+
+      // _this.keepCommandScrolled();
+
+      // Clear the input text box.
+      _this.setState({
+        commandInput: ""
+      });
+    }
+  }
+
+  // Adds a line to the terminal
+  async handleCommandLog(msg) {
+    try {
+      // console.log("msg: ", msg);
+
+      _this.setState({
+        commandOutput: _this.state.commandOutput + "   " + msg + "\n"
+      });
+
+      await this.sleep(250)
+
+      // _this.keepScrolled();
+      _this.keepCommandScrolled();
+    } catch (error) {
+      console.warn(error);
+    }
+  }
+
+  // Keeps the terminal scrolled to the last line
+  keepCommandScrolled() {
+    try {
+      // Keeps scrolled to the bottom
+      var textarea = document.getElementById("commandTerminal");
+      if (textarea) {
+        window.textarea = textarea
+        console.log(`start: textarea.scrollTop: ${textarea.scrollTop}`)
+        console.log(`start: textarea.scrollTopMax: ${textarea.scrollTopMax}`)
+        console.log(`start: textarea.scrollHeight: ${textarea.scrollHeight}`)
+
+        textarea.scrollTop = textarea.scrollTopMax;
+
+        console.log(`stop: textarea.scrollTop: ${textarea.scrollTop}`)
+        console.log(`stop: textarea.scrollTopMax: ${textarea.scrollTopMax}`)
+        console.log(`stop: textarea.scrollHeight: ${textarea.scrollHeight}`)
+      }
+    } catch (error) {
+      console.warn(error);
+    }
+  }
+  /* END command handling functions */
+
+  // Handles text typed into the 'handle' input box.
+  handleHandleInput = event => {
+    event.preventDefault();
+
+    const target = event.target;
+    const value = target.value;
+    const name = target.name;
+    // console.log('value: ', value)
+
+    this.setState({
+      [name]: value
+    });
+  };
+
+  sleep(ms) {
+    return new Promise(resolve => setTimeout(resolve, ms));
   }
 }
 
