@@ -300,7 +300,7 @@ class IPFSPage extends React.Component {
 
       // _this.handleCommandLog(`me: ${msg}`);
 
-      const outMsg = _this.commandRouter.route(msg);
+      const outMsg = await _this.commandRouter.route(msg, _this.appIpfs);
       _this.handleCommandLog(`\n${outMsg}`);
 
       // _this.keepCommandScrolled();
@@ -321,6 +321,7 @@ class IPFSPage extends React.Component {
         commandOutput: _this.state.commandOutput + "   " + msg + "\n"
       });
 
+      // Add a slight delay, to give the browser time to render the DOM.
       await this.sleep(250)
 
       // _this.keepScrolled();
@@ -336,16 +337,9 @@ class IPFSPage extends React.Component {
       // Keeps scrolled to the bottom
       var textarea = document.getElementById("commandTerminal");
       if (textarea) {
-        window.textarea = textarea
-        console.log(`start: textarea.scrollTop: ${textarea.scrollTop}`)
-        console.log(`start: textarea.scrollTopMax: ${textarea.scrollTopMax}`)
-        console.log(`start: textarea.scrollHeight: ${textarea.scrollHeight}`)
+        // window.textarea = textarea
 
         textarea.scrollTop = textarea.scrollTopMax;
-
-        console.log(`stop: textarea.scrollTop: ${textarea.scrollTop}`)
-        console.log(`stop: textarea.scrollTopMax: ${textarea.scrollTopMax}`)
-        console.log(`stop: textarea.scrollHeight: ${textarea.scrollHeight}`)
       }
     } catch (error) {
       console.warn(error);
