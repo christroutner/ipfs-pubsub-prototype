@@ -17,7 +17,7 @@ class IPFSPage extends React.Component {
       chatOutput: "",
       chatInput: "",
       commandInput: "",
-      commandOutput: "",
+      commandOutput: "Enter 'help' to see available commands.",
       showTerminal: true,
       handle: "browser"
     };
@@ -27,6 +27,7 @@ class IPFSPage extends React.Component {
       handleChatLog: _this.handleIncomingChatMsg
     };
     this.appIpfs = new AppIpfs(ipfsConfig);
+
     this.commandRouter = new CommandRouter();
   }
 
@@ -301,7 +302,7 @@ class IPFSPage extends React.Component {
       // _this.handleCommandLog(`me: ${msg}`);
 
       const outMsg = await _this.commandRouter.route(msg, _this.appIpfs);
-      if(outMsg === 'clear') {
+      if (outMsg === "clear") {
         _this.setState({
           commandOutput: ""
         });
@@ -326,7 +327,7 @@ class IPFSPage extends React.Component {
       });
 
       // Add a slight delay, to give the browser time to render the DOM.
-      await this.sleep(250)
+      await this.sleep(250);
 
       // _this.keepScrolled();
       _this.keepCommandScrolled();

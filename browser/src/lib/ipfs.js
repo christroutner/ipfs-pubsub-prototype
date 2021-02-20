@@ -8,6 +8,8 @@ import IpfsCoord from "ipfs-coord";
 // CHANGE THESE VARIABLES
 const CHAT_ROOM_NAME = "psf-ipfs-chat-001";
 
+const BchWallet = typeof window !== "undefined" ? window.SlpWallet : null;
+
 let _this;
 
 class AppIpfs {
@@ -28,11 +30,20 @@ class AppIpfs {
       this.ipfs = await IPFS.create();
       this.handleLog("IPFS node created.");
 
+      // Generate a new wallet.
+      this.wallet = new BchWallet();
+      // console.log("this.wallet: ", this.wallet);
+
+      // Wait for the wallet to initialize.
+      await this.wallet.walletInfoPromise;
+
       // Instantiate the IPFS Coordination library.
       this.ipfsCoord = new IpfsCoord({
         ipfs: this.ipfs,
         type: "browser",
-        logHandler: this.handleLog
+        logHandler: this.handleLog,
+        bchjs: this.wallet.bchjs,
+        mnemonic: this.wallet.walletInfo.mnemonic
       });
       this.handleLog("ipfs-coord library instantiated.");
 

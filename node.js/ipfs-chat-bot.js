@@ -2,6 +2,9 @@
   A node.js IPFS node. This could represent a REST API server.
 */
 
+const BCHJS = require('@psf/bch-js')
+const bchjs = new BCHJS()
+
 // Relay nodes.
 // const CHAT_ADDR =
 //   "/ip4/138.68.212.34/tcp/4002/ipfs/QmaUW4oCVPUFLRqeSjvhHwGFJHGWrYWLBEt7WxnexDm3Xa";
@@ -45,7 +48,7 @@ async function startClientNode() {
     console.log("... IPFS is ready.\n");
 
     // Instantiate the IPFS Coordination library.
-    ipfsCoord = new IpfsCoord({ ipfs, type: "node.js", isCircuitRelay: true });
+    ipfsCoord = new IpfsCoord({ ipfs, bchjs, type: "node.js", isCircuitRelay: true });
     await ipfsCoord.isReady();
     console.log("IPFS coordination is ready.");
 
