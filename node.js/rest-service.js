@@ -15,10 +15,11 @@ const ROOM_NAME = "customPubsubRoom123";
 const IPFS = require("ipfs");
 const OrbitDB = require("orbit-db");
 
-
 const AccessControllers = require("orbit-db-access-controllers");
-const OtherAccessController = require('./other-access-controller')
-AccessControllers.addAccessController({ AccessController: OtherAccessController })
+const OtherAccessController = require("./other-access-controller");
+AccessControllers.addAccessController({
+  AccessController: OtherAccessController
+});
 
 let ipfsId; // Used to track the IPFS ID of this node.
 let ipfs; // instance of IPFS for this node.
@@ -143,7 +144,7 @@ async function createOrbitDB() {
 
     const options = {
       accessController: {
-        type: 'othertype',
+        type: "othertype",
         write: ["*"]
       }
     };
@@ -152,14 +153,14 @@ async function createOrbitDB() {
     // db = await orbitdb.eventlog(DB_NAME, options);
     // await db.load();
 
-    const DB_NAME = "keyvalue002";
+    const DB_NAME = "keyvalue003";
     db = await orbitdb.keyvalue(DB_NAME, options);
     await db.load();
 
     console.log(`db id: ${db.id}`);
 
     // Add random data to the database every 30 seconds.
-    setInterval(query2, 1000 * 30);
+    setInterval(query2, 1000 * 20);
   } catch (err) {
     console.error("Error in createOrbitDB: ", err);
   }
@@ -167,9 +168,12 @@ async function createOrbitDB() {
 
 const query2 = async () => {
   try {
-    rndKey = Math.floor(Math.random() * 1000000);
+    let rndKey = Math.floor(Math.random() * 1000000);
     rndKey = rndKey.toString();
-    const rndValue = Math.floor(Math.random() * 1000000);
+    let rndValue = Math.floor(Math.random() * 1000000);
+
+    rndKey = "2093afb8de46f30b43ce7c5fbdf4ab667768edd47937efad7e2c2f12e7fe623d"
+    // rndValue = 123
 
     console.log(`Adding key: ${rndKey}, with value: ${rndValue}`);
 
