@@ -1,10 +1,10 @@
 {
-  "name": "rest-service",
+  "name": "node2",
   "version": "1.0.0",
   "description": "A node.js IPFS node that communicates using pubsub and circuit-relay",
   "main": "rest-service.js",
   "scripts": {
-    "start": "node rest-service.js",
+    "start": "node node2.js",
     "lint": "standard --env mocha --fix"
   },
   "keywords": [

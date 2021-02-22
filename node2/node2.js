@@ -8,12 +8,15 @@ const CHAT_ADDR =
 const BOOTSTRAP_ADDR =
   "/ip4/116.203.193.74/tcp/4001/ipfs/QmNZktxkfScScnHCFSGKELH3YRqdxHQ3Le9rAoRLhZ6vgL";
 
-// Pubsub room.
+// Set these constants for your own tests.
 const ROOM_NAME = "customPubsubRoom123";
+const PORT = 6002
+const PEER1 = "/ip4/127.0.0.1/tcp/4002/p2p/QmQ8bn8FL9RYaTdWTBSGSx3VzhhRunno11nfcnFdbcnKH5"
+
 
 // Global npm libraries
 const IPFS = require("ipfs");
-const OrbitDB = require('orbit-db')
+const OrbitDB = require("orbit-db");
 
 let ipfsId; // Used to track the IPFS ID of this node.
 let ipfs; // instance of IPFS for this node.
@@ -32,7 +35,12 @@ const ipfsOptions = {
         enabled: true // enable circuit relay HOP (make this node a relay)
       }
     },
-    pubsub: true // enable pubsub
+    pubsub: true, // enable pubsub
+    Addresses: {
+      Swarm: [`/ip4/0.0.0.0/tcp/${PORT}`],
+      API: `/ip4/127.0.0.1/tcp/${PORT+1}`,
+      Gateway: `/ip4/127.0.0.1/tcp/${PORT+2}`
+    }
   }
 };
 
@@ -49,8 +57,8 @@ async function startClientNode() {
     ipfsId = ipfsId.PeerID;
     console.log(`This nodes peer ID: ${ipfsId}`);
 
-    // const allConfig = await ipfs.config.getAll()
-    // console.log(`allConfig: ${JSON.stringify(allConfig, null, 2)}`)
+    // const allConfig = await ipfs.config.getAll();
+    // console.log(`allConfig: ${JSON.stringify(allConfig, null, 2)}`);
 
     // Get the local addresses this node is listening to.
     const localAddrs = await ipfs.swarm.localAddrs();
@@ -74,6 +82,15 @@ async function startClientNode() {
       console.log("3. Connected to second relay server.\n");
     } catch (err) {
       console.log("3. Could not connect to second bootstrap server.\n");
+    }
+
+    // Connect to the node1 peer
+    try {
+      console.log(`Attemping connection to local peer: ${PEER1}`);
+      await ipfs.swarm.connect(PEER1);
+      console.log("3b. Connected to PEER1.\n");
+    } catch (err) {
+      console.log("3b. Could not connect to PEER1.\n");
     }
 
     // Subscribe to the pubsub room.
