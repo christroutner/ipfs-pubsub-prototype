@@ -29,7 +29,8 @@
   "repository": "christroutner/ipfs-pubsub-prototype",
   "dependencies": {
     "ipfs": "^0.50.1",
-    "orbit-db": "^0.26.0"
+    "orbit-db": "^0.26.0",
+    "orbit-db-access-controllers": "^0.3.0"
   },
   "devDependencies": {
     "chai": "^4.1.2",

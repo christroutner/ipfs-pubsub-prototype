@@ -13,7 +13,12 @@ const ROOM_NAME = "customPubsubRoom123";
 
 // Global npm libraries
 const IPFS = require("ipfs");
-const OrbitDB = require('orbit-db')
+const OrbitDB = require("orbit-db");
+
+
+const AccessControllers = require("orbit-db-access-controllers");
+const OtherAccessController = require('./other-access-controller')
+AccessControllers.addAccessController({ AccessController: OtherAccessController })
 
 let ipfsId; // Used to track the IPFS ID of this node.
 let ipfs; // instance of IPFS for this node.
@@ -125,12 +130,20 @@ startClientNode();
 async function createOrbitDB() {
   try {
     const orbitdb = await OrbitDB.createInstance(ipfs, {
-      directory: "./orbitdb/examples/eventlog"
+      directory: "./orbitdb/examples/eventlog",
       // directory: "./orbitdb/examples/keyvalue"
+      AccessControllers: AccessControllers
     });
+
+    // const options = {
+    //   accessController: {
+    //     write: ["*"]
+    //   }
+    // };
 
     const options = {
       accessController: {
+        type: 'othertype',
         write: ["*"]
       }
     };
@@ -154,17 +167,17 @@ async function createOrbitDB() {
 
 const query2 = async () => {
   try {
-    rndKey = Math.floor(Math.random() * 1000000)
-    rndKey = rndKey.toString()
-    const rndValue = Math.floor(Math.random() * 1000000)
+    rndKey = Math.floor(Math.random() * 1000000);
+    rndKey = rndKey.toString();
+    const rndValue = Math.floor(Math.random() * 1000000);
 
-    console.log(`Adding key: ${rndKey}, with value: ${rndValue}`)
+    console.log(`Adding key: ${rndKey}, with value: ${rndValue}`);
 
-    await db.put(rndKey, rndValue)
-  } catch(err) {
-    console.error('Error in query2: ', err)
+    await db.put(rndKey, rndValue);
+  } catch (err) {
+    console.error("Error in query2: ", err);
   }
-}
+};
 
 const query = async () => {
   const index = Math.floor(Math.random() * 10);
