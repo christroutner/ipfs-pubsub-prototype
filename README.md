@@ -1,3 +1,12 @@
+# PROTOTYPE
+
+This is a prototype for proving out the idea that write-access to the database could be controlled by proving a token burn on the blockchain.
+Here is where I left off:
+- I created an orbitdb key-value store.
+- The 'key' is the TXID of a token burn.
+- A custom Access Controller was created that checks the TXID and verifies it burned a minimum amount of the test token, before allowing a write to the database.
+
+
 # ipfs-pubsub-prototype
 
 This is a demonstration prototype I created for myself ([Chris Troutner](https://github.com/christroutner)) to record the lessons I spent over a day, teaching myself how to connect a web browser to a node.js service via an IPFS circuit-relay node and communicating via pubsub channel. This prototype is a building block for a future project for building an uncensorable REST API accessible from a browser.
