@@ -130,8 +130,8 @@ startClientNode();
 async function createOrbitDB() {
   try {
     const orbitdb = await OrbitDB.createInstance(ipfs, {
-      directory: "./orbitdb/examples/eventlog",
-      // directory: "./orbitdb/examples/keyvalue"
+      // directory: "./orbitdb/examples/eventlog",
+      directory: "./orbitdb/dbs/keyvalue",
       AccessControllers: AccessControllers
     });
 
@@ -148,18 +148,18 @@ async function createOrbitDB() {
       }
     };
 
-    const DB_NAME = "test001";
-    db = await orbitdb.eventlog(DB_NAME, options);
-    await db.load();
-
-    // const DB_NAME = "test002";
-    // db = await orbitdb.keyvalue(DB_NAME, options);
+    // const DB_NAME = "test001";
+    // db = await orbitdb.eventlog(DB_NAME, options);
     // await db.load();
+
+    const DB_NAME = "keyvalue002";
+    db = await orbitdb.keyvalue(DB_NAME, options);
+    await db.load();
 
     console.log(`db id: ${db.id}`);
 
     // Add random data to the database every 30 seconds.
-    setInterval(query, 1000 * 30);
+    setInterval(query2, 1000 * 30);
   } catch (err) {
     console.error("Error in createOrbitDB: ", err);
   }

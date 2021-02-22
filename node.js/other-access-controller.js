@@ -11,6 +11,43 @@ class OtherAccessController extends AccessController {
     this._options = options || {}
   }
 
+  /* Factory */
+  static async create (orbitdb, options = {}) {
+    const ac = new OtherAccessController(orbitdb, options)
+
+    // console.log('orbitdb: ', orbitdb)
+    console.log('create options: ', options)
+
+    await ac.load(options.address || options.name || 'default-access-controller')
+
+    // Add write access from options
+    if (options.write && !options.address) {
+      await pMapSeries(options.write, async (e) => ac.grant('write', e))
+    }
+
+    return ac
+  }
+
+  async load (address) {
+    if (this._db) { await this._db.close() }
+
+    // Force '<address>/_access' naming for the database
+    this._db = await this._orbitdb.keyvalue(ensureAddress(address), {
+      // use ipfs controller as a immutable "root controller"
+      accessController: {
+        type: 'ipfs',
+        write: this._options.admin || [this._orbitdb.identity.id]
+      },
+      sync: true
+    })
+
+    this._db.events.on('ready', this._onUpdate.bind(this))
+    this._db.events.on('write', this._onUpdate.bind(this))
+    this._db.events.on('replicated', this._onUpdate.bind(this))
+
+    await this._db.load()
+  }
+
   // Returns the type of the access controller
   static get type () { return 'othertype' }
 
@@ -21,6 +58,8 @@ class OtherAccessController extends AccessController {
 
   // Return true if entry is allowed to be added to the database
   async canAppend (entry, identityProvider) {
+    console.log('canAppend entry: ', entry)
+
     // Write keys and admins keys are allowed
     const access = new Set([...this.get('write'), ...this.get('admin')])
     // If the ACL contains the writer's public key or it contains '*'
@@ -64,25 +103,7 @@ class OtherAccessController extends AccessController {
     await this._db.close()
   }
 
-  async load (address) {
-    if (this._db) { await this._db.close() }
 
-    // Force '<address>/_access' naming for the database
-    this._db = await this._orbitdb.keyvalue(ensureAddress(address), {
-      // use ipfs controller as a immutable "root controller"
-      accessController: {
-        type: 'ipfs',
-        write: this._options.admin || [this._orbitdb.identity.id]
-      },
-      sync: true
-    })
-
-    this._db.events.on('ready', this._onUpdate.bind(this))
-    this._db.events.on('write', this._onUpdate.bind(this))
-    this._db.events.on('replicated', this._onUpdate.bind(this))
-
-    await this._db.load()
-  }
 
   async save () {
     // return the manifest data
@@ -92,6 +113,9 @@ class OtherAccessController extends AccessController {
   }
 
   async grant (capability, key) {
+    console.log('grant capability: ', capability)
+    console.log('grant key: ', key)
+
     // Merge current keys with the new key
     const capabilities = new Set([...(this._db.get(capability) || []), ...[key]])
     await this._db.put(capability, Array.from(capabilities.values()))
@@ -112,18 +136,7 @@ class OtherAccessController extends AccessController {
     this.emit('updated')
   }
 
-  /* Factory */
-  static async create (orbitdb, options = {}) {
-    const ac = new OtherAccessController(orbitdb, options)
-    await ac.load(options.address || options.name || 'default-access-controller')
 
-    // Add write access from options
-    if (options.write && !options.address) {
-      await pMapSeries(options.write, async (e) => ac.grant('write', e))
-    }
-
-    return ac
-  }
 }
 
 module.exports = OtherAccessController
