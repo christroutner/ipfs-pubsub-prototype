@@ -126,6 +126,7 @@ async function createOrbitDB() {
   try {
     const orbitdb = await OrbitDB.createInstance(ipfs, {
       directory: "./orbitdb/examples/eventlog"
+      // directory: "./orbitdb/examples/keyvalue"
     });
 
     const options = {
@@ -138,11 +139,30 @@ async function createOrbitDB() {
     db = await orbitdb.eventlog(DB_NAME, options);
     await db.load();
 
+    // const DB_NAME = "test002";
+    // db = await orbitdb.keyvalue(DB_NAME, options);
+    // await db.load();
+
     console.log(`db id: ${db.id}`);
 
+    // Add random data to the database every 30 seconds.
     setInterval(query, 1000 * 30);
   } catch (err) {
     console.error("Error in createOrbitDB: ", err);
+  }
+}
+
+const query2 = async () => {
+  try {
+    rndKey = Math.floor(Math.random() * 1000000)
+    rndKey = rndKey.toString()
+    const rndValue = Math.floor(Math.random() * 1000000)
+
+    console.log(`Adding key: ${rndKey}, with value: ${rndValue}`)
+
+    await db.put(rndKey, rndValue)
+  } catch(err) {
+    console.error('Error in query2: ', err)
   }
 }
 

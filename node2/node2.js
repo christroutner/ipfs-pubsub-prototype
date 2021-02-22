@@ -11,7 +11,7 @@ const BOOTSTRAP_ADDR =
 // Set these constants for your own tests.
 const ROOM_NAME = "customPubsubRoom123";
 const PORT = 6002
-const PEER1 = "/ip4/127.0.0.1/tcp/4002/p2p/QmQ8bn8FL9RYaTdWTBSGSx3VzhhRunno11nfcnFdbcnKH5"
+const PEER1 = "/ip4/127.0.0.1/tcp/4002/p2p/QmRrUWLTxUt2HBBT4fCS4jCQAbKtekAtiMhHhtibQY6taB"
 
 
 // Global npm libraries
