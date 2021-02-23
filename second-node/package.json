@@ -1,0 +1,59 @@
+{
+  "name": "mock-client.js",
+  "version": "1.0.0",
+  "description": "Simulates a client by connecting to the bch-js bridge and making a series of calls",
+  "main": "mock-client.js",
+  "scripts": {
+    "start": "node mock-client.js",
+    "lint": "standard --env mocha --fix"
+  },
+  "keywords": [
+    "bitcoin",
+    "bitcoin cash",
+    "wallet",
+    "javascript",
+    "cryptocurrency",
+    "react",
+    "front end",
+    "client",
+    "apidoc",
+    "slp",
+    "tokens"
+  ],
+  "author": "Chris Troutner <chris.troutner@gmail.com>",
+  "license": "MIT",
+  "apidoc": {
+    "title": "rest-service",
+    "url": "localhost:5000"
+  },
+  "repository": "christroutner/ipfs-pubsub-prototype",
+  "dependencies": {
+    "@psf/bch-js": "^4.15.0",
+    "ipfs": "^0.50.1",
+    "ipfs-coord": "^2.1.4"
+  },
+  "devDependencies": {
+    "chai": "^4.1.2",
+    "coveralls": "^3.0.2",
+    "eslint": "5.16.0",
+    "eslint-config-prettier": "^6.0.0",
+    "eslint-config-standard": "^14.1.0",
+    "eslint-plugin-node": "^11.1.0",
+    "eslint-plugin-prettier": "^3.1.0",
+    "eslint-plugin-standard": "^4.0.0",
+    "husky": "^4.2.5",
+    "mocha": "^7.0.1",
+    "nyc": "^15.0.0",
+    "semantic-release": "^17.0.0",
+    "sinon": "^9.0.2",
+    "standard": "^14.3.1"
+  },
+  "release": {
+    "publish": [
+      {
+        "path": "@semantic-release/npm",
+        "npmPublish": false
+      }
+    ]
+  }
+}
