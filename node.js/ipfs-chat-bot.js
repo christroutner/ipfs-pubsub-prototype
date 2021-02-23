@@ -89,7 +89,7 @@ async function startClientNode() {
         // console.log(`Peers: ${JSON.stringify(peers, null, 2)}`)
         // console.log(`peerList.length: ${peerList.length}`)
 
-        const secondNode = 'QmaiNMyvNng12H4iUwuSnHGc3ojeZaf3TRzy3iBmC1hQft'
+        const secondNode = 'QmP6T289csy57oNpeoip2yyu43GJ9mqEYRGJiT6WQdtdw6'
 
         if(peerList.indexOf(secondNode) < 0) {
           console.log(`Second node peer ${secondNode} not yet connected`)
