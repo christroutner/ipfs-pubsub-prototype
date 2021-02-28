@@ -89,19 +89,16 @@ async function startClientNode() {
         // console.log(`Peers: ${JSON.stringify(peers, null, 2)}`)
         // console.log(`peerList.length: ${peerList.length}`)
 
-        const secondNode = 'QmP6T289csy57oNpeoip2yyu43GJ9mqEYRGJiT6WQdtdw6'
+        // Loop through each peer.
+        for(let i=0; i < peerList.length; i++) {
+          const thisPeer = peerList[i]
 
-        if(peerList.indexOf(secondNode) < 0) {
-          console.log(`Second node peer ${secondNode} not yet connected`)
-          return
+          const now = new Date()
+          const msg = `Hello from ${ipfsCoord.ipfs.state.ipfsPeerId} at ${now.toLocaleString()}`
+
+          // Send an e2e message to the peer.
+          await ipfsCoord.ipfs.encrypt.sendEncryptedMsg(peers[thisPeer], msg)
         }
-
-        // const thisPeer = peerList[0]
-        // console.log(`Sending e2e encrypted message to this peer: ${thisPeer}`)
-
-        const msg = 'hello there!'
-        // await ipfsCoord.ipfs.encrypt.sendEncryptedMsg(peers[thisPeer], msg)
-        await ipfsCoord.ipfs.encrypt.sendEncryptedMsg(peers[secondNode], msg)
 
       } catch(err) {
         console.error('Error trying to send e2e encrypted message to each peer: ', err)
