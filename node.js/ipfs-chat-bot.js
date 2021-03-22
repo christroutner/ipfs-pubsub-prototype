@@ -16,8 +16,8 @@ const CHAT_ROOM_NAME = "psf-ipfs-chat-001";
 
 // Global npm libraries
 const IPFS = require("ipfs");
-// const IpfsCoord = require("ipfs-coord")
-const IpfsCoord = require("../../ipfs-coord/index");
+const IpfsCoord = require("ipfs-coord")
+// const IpfsCoord = require("../../ipfs-coord/index");
 
 let ipfsId; // Used to track the IPFS ID of this node.
 let ipfs; // instance of IPFS for this node.
