@@ -29,7 +29,7 @@
   "repository": "christroutner/ipfs-pubsub-prototype",
   "dependencies": {
     "@psf/bch-js": "^4.16.1",
-    "ipfs": "^0.50.1",
+    "ipfs": "^0.54.4",
     "ipfs-coord": "^2.2.6"
   },
   "devDependencies": {
@@ -44,7 +44,7 @@
     "husky": "^4.2.5",
     "mocha": "^7.0.1",
     "nyc": "^15.0.0",
-    "semantic-release": "^17.0.0",
+    "semantic-release": "^17.4.2",
     "sinon": "^9.0.2",
     "standard": "^14.3.1"
   },
