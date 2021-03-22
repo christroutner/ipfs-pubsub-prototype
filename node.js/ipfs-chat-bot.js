@@ -36,7 +36,13 @@ const ipfsOptions = {
         enabled: true // enable circuit relay HOP (make this node a relay)
       }
     },
-    pubsub: true // enable pubsub
+    pubsub: true, // enable pubsub
+    Swarm: {
+      ConnMgr: {
+        HighWater: 100,
+        LowWater: 20
+      }
+    }
   }
 };
 
@@ -51,6 +57,9 @@ async function startClientNode() {
     ipfsCoord = new IpfsCoord({ ipfs, bchjs, BCHJS, type: "node.js", isCircuitRelay: true });
     await ipfsCoord.isReady();
     console.log("IPFS coordination is ready.");
+
+    const nodeConfig = await ipfs.config.getAll()
+    console.log(`IPFS node configuration: ${JSON.stringify(nodeConfig, null, 2)}`)
 
     // subscribe to the 'chat' chatroom.
     await ipfsCoord.ipfs.pubsub.subscribeToPubsubChannel(
@@ -97,7 +106,9 @@ async function startClientNode() {
           const msg = `Hello from ${ipfsCoord.ipfs.state.ipfsPeerId} at ${now.toLocaleString()}`
 
           // Send an e2e message to the peer.
-          await ipfsCoord.ipfs.encrypt.sendEncryptedMsg(peers[thisPeer], msg)
+          // await ipfsCoord.ipfs.encrypt.sendEncryptedMsg(peers[thisPeer], msg)
+          const peerId = peers[thisPeer].ipfsId
+          await ipfsCoord.ipfs.orbitdb.sendToDb(peerId, msg)
         }
 
       } catch(err) {

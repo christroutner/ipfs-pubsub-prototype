@@ -28,9 +28,9 @@
   },
   "repository": "christroutner/ipfs-pubsub-prototype",
   "dependencies": {
-    "@psf/bch-js": "^4.15.0",
+    "@psf/bch-js": "^4.16.1",
     "ipfs": "^0.50.1",
-    "ipfs-coord": "^2.1.4"
+    "ipfs-coord": "^2.2.6"
   },
   "devDependencies": {
     "chai": "^4.1.2",
